@@ -1,9 +1,9 @@
 pipeline {
-    agent any
+    agent  {label 'agent'}
         stages{
         stage("Git Clone"){
             steps{
-                git url: "https://github.com/kshitijabartakke/calculategrowth.git", branch: "main"
+                git url: "https://github.com/anirudhadak2/calculategrowth.git", branch: "main"
             }
         }
         stage("Create Docker Image"){
