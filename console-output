@@ -10,11 +10,11 @@ The recommended git tool is: NONE
 No credentials specified
  > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/pipeline1/.git # timeout=10
 Fetching changes from the remote Git repository
- > git config remote.origin.url https://github.com/kshitijabartakke/calculategrowth.git # timeout=10
-Fetching upstream changes from https://github.com/kshitijabartakke/calculategrowth.git
+ > git config remote.origin.url https://github.com/anirudhadak2/calculategrowth.git # timeout=10
+Fetching upstream changes from https://github.com/anirudhadak2/calculategrowth.git
  > git --version # timeout=10
  > git --version # 'git version 2.25.1'
- > git fetch --tags --force --progress -- https://github.com/kshitijabartakke/calculategrowth.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git fetch --tags --force --progress -- https://github.com/anirudhadak2/calculategrowth.git +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
 Checking out Revision 94cf86bf3ef8122ff02ff5e5e9994d7bacfd1936 (refs/remotes/origin/main)
  > git config core.sparsecheckout # timeout=10
