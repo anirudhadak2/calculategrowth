@@ -20,8 +20,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId:"dockerhub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
                 sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
                 sh "docker images"
-                sh "docker tag  calculategrowth  anirudhadak2/new-app:calculategrowth"
-		sh "docker push anirudhadak2/new-app:calculategrowth"
+                sh "docker tag  calculategrowth  anirudhadak2/test:calculategrowth"
+		sh "docker push anirudhadak2/test:calculategrowth"
 		}
 	    }
 	}
