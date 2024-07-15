@@ -1,0 +1,369 @@
+Started by GitHub push by anirudhadak2
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/calculate-growth-app
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Code)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/calculate-growth-app/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/anirudhadak2/calculategrowth.git # timeout=10
+Fetching upstream changes from https://github.com/anirudhadak2/calculategrowth.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/anirudhadak2/calculategrowth.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 24fd7f5530a4df252c6eaac768350a144614beba (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 24fd7f5530a4df252c6eaac768350a144614beba # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D main # timeout=10
+ > git checkout -b main 24fd7f5530a4df252c6eaac768350a144614beba # timeout=10
+Commit message: "Update app.py"
+ > git rev-list --no-walk 610048d56c528be5c4d774529f0b85da65998922 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (TRIVY FS SCAN)
+[Pipeline] sh
++ trivy fs .
+2024-07-15T17:11:48Z	INFO	Vulnerability scanning is enabled
+2024-07-15T17:11:48Z	INFO	Secret scanning is enabled
+2024-07-15T17:11:48Z	INFO	If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2024-07-15T17:11:48Z	INFO	Please see also https://aquasecurity.github.io/trivy/v0.53/docs/scanner/secret#recommendation for faster secret detection
+2024-07-15T17:11:48Z	WARN	[pip] Unable to find python `site-packages` directory. License detection is skipped.	err="site-packages directory not found"
+2024-07-15T17:11:48Z	INFO	Number of language-specific files	num=0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Docker Build & Push)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withDockerRegistry
+$ /var/lib/jenkins/tools/org.jenkinsci.plugins.docker.commons.tools.DockerTool/docker/bin/docker login -u anirudhadak2 -p ******** https://index.docker.io/v1/
+Login Succeeded
+[Pipeline] {
+[Pipeline] sh
++ docker build -t calculategrowth .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  1.317MB
+
+Step 1/11 : FROM python:3.8
+ ---> 36f8d269dc03
+Step 2/11 : ENV MICRO_SERVICE=/home/app/webapp
+ ---> Using cache
+ ---> 4ec9c3972d58
+Step 3/11 : RUN mkdir -p $MICRO_SERVICE
+ ---> Using cache
+ ---> c534aeb73fee
+Step 4/11 : WORKDIR $MICRO_SERVICE
+ ---> Using cache
+ ---> 929340a455f8
+Step 5/11 : ENV PYTHONDONTWRITEBYTECODE 1
+ ---> Using cache
+ ---> 44830f5c7009
+Step 6/11 : ENV PYTHONUNBUFFERED 1
+ ---> Using cache
+ ---> 47a963457ece
+Step 7/11 : RUN pip install --upgrade pip
+ ---> Using cache
+ ---> 5ed97f21c211
+Step 8/11 : COPY . $MICRO_SERVICE
+ ---> 907a646ac52d
+Step 9/11 : RUN pip install -r requirements.txt
+ ---> Running in 1b76f568d0b4
+Collecting streamlit (from -r requirements.txt (line 1))
+  Downloading streamlit-1.36.0-py2.py3-none-any.whl.metadata (8.5 kB)
+Collecting altair<6,>=4.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading altair-5.3.0-py3-none-any.whl.metadata (9.2 kB)
+Collecting blinker<2,>=1.0.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading blinker-1.8.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting cachetools<6,>=4.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading cachetools-5.3.3-py3-none-any.whl.metadata (5.3 kB)
+Collecting click<9,>=7.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading click-8.1.7-py3-none-any.whl.metadata (3.0 kB)
+Collecting numpy<3,>=1.20 (from streamlit->-r requirements.txt (line 1))
+  Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.6 kB)
+Collecting packaging<25,>=20 (from streamlit->-r requirements.txt (line 1))
+  Downloading packaging-24.1-py3-none-any.whl.metadata (3.2 kB)
+Collecting pandas<3,>=1.3.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading pandas-2.0.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (18 kB)
+Collecting pillow<11,>=7.1.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading pillow-10.4.0-cp38-cp38-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
+Collecting protobuf<6,>=3.20 (from streamlit->-r requirements.txt (line 1))
+  Downloading protobuf-5.27.2-cp38-abi3-manylinux2014_x86_64.whl.metadata (592 bytes)
+Collecting pyarrow>=7.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading pyarrow-16.1.0-cp38-cp38-manylinux_2_28_x86_64.whl.metadata (3.0 kB)
+Collecting requests<3,>=2.27 (from streamlit->-r requirements.txt (line 1))
+  Downloading requests-2.32.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting rich<14,>=10.14.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading rich-13.7.1-py3-none-any.whl.metadata (18 kB)
+Collecting tenacity<9,>=8.1.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading tenacity-8.5.0-py3-none-any.whl.metadata (1.2 kB)
+Collecting toml<2,>=0.10.1 (from streamlit->-r requirements.txt (line 1))
+  Downloading toml-0.10.2-py2.py3-none-any.whl.metadata (7.1 kB)
+Collecting typing-extensions<5,>=4.3.0 (from streamlit->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.12.2-py3-none-any.whl.metadata (3.0 kB)
+Collecting gitpython!=3.1.19,<4,>=3.0.7 (from streamlit->-r requirements.txt (line 1))
+  Downloading GitPython-3.1.43-py3-none-any.whl.metadata (13 kB)
+Collecting pydeck<1,>=0.8.0b4 (from streamlit->-r requirements.txt (line 1))
+  Downloading pydeck-0.9.1-py2.py3-none-any.whl.metadata (4.1 kB)
+Collecting tornado<7,>=6.0.3 (from streamlit->-r requirements.txt (line 1))
+  Downloading tornado-6.4.1-cp38-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.5 kB)
+Collecting watchdog<5,>=2.1.5 (from streamlit->-r requirements.txt (line 1))
+  Downloading watchdog-4.0.1-py3-none-manylinux2014_x86_64.whl.metadata (37 kB)
+Collecting jinja2 (from altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading jinja2-3.1.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting jsonschema>=3.0 (from altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading jsonschema-4.23.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting toolz (from altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading toolz-0.12.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting gitdb<5,>=4.0.1 (from gitpython!=3.1.19,<4,>=3.0.7->streamlit->-r requirements.txt (line 1))
+  Downloading gitdb-4.0.11-py3-none-any.whl.metadata (1.2 kB)
+Collecting python-dateutil>=2.8.2 (from pandas<3,>=1.3.0->streamlit->-r requirements.txt (line 1))
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting pytz>=2020.1 (from pandas<3,>=1.3.0->streamlit->-r requirements.txt (line 1))
+  Downloading pytz-2024.1-py2.py3-none-any.whl.metadata (22 kB)
+Collecting tzdata>=2022.1 (from pandas<3,>=1.3.0->streamlit->-r requirements.txt (line 1))
+  Downloading tzdata-2024.1-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting charset-normalizer<4,>=2 (from requests<3,>=2.27->streamlit->-r requirements.txt (line 1))
+  Downloading charset_normalizer-3.3.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (33 kB)
+Collecting idna<4,>=2.5 (from requests<3,>=2.27->streamlit->-r requirements.txt (line 1))
+  Downloading idna-3.7-py3-none-any.whl.metadata (9.9 kB)
+Collecting urllib3<3,>=1.21.1 (from requests<3,>=2.27->streamlit->-r requirements.txt (line 1))
+  Downloading urllib3-2.2.2-py3-none-any.whl.metadata (6.4 kB)
+Collecting certifi>=2017.4.17 (from requests<3,>=2.27->streamlit->-r requirements.txt (line 1))
+  Downloading certifi-2024.7.4-py3-none-any.whl.metadata (2.2 kB)
+Collecting markdown-it-py>=2.2.0 (from rich<14,>=10.14.0->streamlit->-r requirements.txt (line 1))
+  Downloading markdown_it_py-3.0.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich<14,>=10.14.0->streamlit->-r requirements.txt (line 1))
+  Downloading pygments-2.18.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting smmap<6,>=3.0.1 (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->streamlit->-r requirements.txt (line 1))
+  Downloading smmap-5.0.1-py3-none-any.whl.metadata (4.3 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading MarkupSafe-2.1.5-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.0 kB)
+Collecting attrs>=22.2.0 (from jsonschema>=3.0->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading attrs-23.2.0-py3-none-any.whl.metadata (9.5 kB)
+Collecting importlib-resources>=1.4.0 (from jsonschema>=3.0->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading importlib_resources-6.4.0-py3-none-any.whl.metadata (3.9 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema>=3.0->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading jsonschema_specifications-2023.12.1-py3-none-any.whl.metadata (3.0 kB)
+Collecting pkgutil-resolve-name>=1.3.10 (from jsonschema>=3.0->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading pkgutil_resolve_name-1.3.10-py3-none-any.whl.metadata (624 bytes)
+Collecting referencing>=0.28.4 (from jsonschema>=3.0->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading referencing-0.35.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.7.1 (from jsonschema>=3.0->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading rpds_py-0.19.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich<14,>=10.14.0->streamlit->-r requirements.txt (line 1))
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas<3,>=1.3.0->streamlit->-r requirements.txt (line 1))
+  Downloading six-1.16.0-py2.py3-none-any.whl.metadata (1.8 kB)
+Collecting zipp>=3.1.0 (from importlib-resources>=1.4.0->jsonschema>=3.0->altair<6,>=4.0->streamlit->-r requirements.txt (line 1))
+  Downloading zipp-3.19.2-py3-none-any.whl.metadata (3.6 kB)
+Downloading streamlit-1.36.0-py2.py3-none-any.whl (8.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.6/8.6 MB 76.3 MB/s eta 0:00:00
+Downloading altair-5.3.0-py3-none-any.whl (857 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 857.8/857.8 kB 42.3 MB/s eta 0:00:00
+Downloading blinker-1.8.2-py3-none-any.whl (9.5 kB)
+Downloading cachetools-5.3.3-py3-none-any.whl (9.3 kB)
+Downloading click-8.1.7-py3-none-any.whl (97 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 7.2 MB/s eta 0:00:00
+Downloading GitPython-3.1.43-py3-none-any.whl (207 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 207.3/207.3 kB 15.3 MB/s eta 0:00:00
+Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.3/17.3 MB 62.0 MB/s eta 0:00:00
+Downloading packaging-24.1-py3-none-any.whl (53 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.0/54.0 kB 3.4 MB/s eta 0:00:00
+Downloading pandas-2.0.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 70.1 MB/s eta 0:00:00
+Downloading pillow-10.4.0-cp38-cp38-manylinux_2_28_x86_64.whl (4.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 70.6 MB/s eta 0:00:00
+Downloading protobuf-5.27.2-cp38-abi3-manylinux2014_x86_64.whl (309 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 309.3/309.3 kB 17.3 MB/s eta 0:00:00
+Downloading pyarrow-16.1.0-cp38-cp38-manylinux_2_28_x86_64.whl (40.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 MB 40.4 MB/s eta 0:00:00
+Downloading pydeck-0.9.1-py2.py3-none-any.whl (6.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 69.2 MB/s eta 0:00:00
+Downloading requests-2.32.3-py3-none-any.whl (64 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.9/64.9 kB 5.5 MB/s eta 0:00:00
+Downloading rich-13.7.1-py3-none-any.whl (240 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 240.7/240.7 kB 15.3 MB/s eta 0:00:00
+Downloading tenacity-8.5.0-py3-none-any.whl (28 kB)
+Downloading toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Downloading tornado-6.4.1-cp38-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (436 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 436.8/436.8 kB 37.0 MB/s eta 0:00:00
+Downloading typing_extensions-4.12.2-py3-none-any.whl (37 kB)
+Downloading watchdog-4.0.1-py3-none-manylinux2014_x86_64.whl (83 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 83.0/83.0 kB 6.9 MB/s eta 0:00:00
+Downloading certifi-2024.7.4-py3-none-any.whl (162 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 163.0/163.0 kB 13.0 MB/s eta 0:00:00
+Downloading charset_normalizer-3.3.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (141 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 141.1/141.1 kB 8.6 MB/s eta 0:00:00
+Downloading gitdb-4.0.11-py3-none-any.whl (62 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.7/62.7 kB 4.9 MB/s eta 0:00:00
+Downloading idna-3.7-py3-none-any.whl (66 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.8/66.8 kB 3.9 MB/s eta 0:00:00
+Downloading jinja2-3.1.4-py3-none-any.whl (133 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.3/133.3 kB 11.7 MB/s eta 0:00:00
+Downloading jsonschema-4.23.0-py3-none-any.whl (88 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.5/88.5 kB 6.7 MB/s eta 0:00:00
+Downloading markdown_it_py-3.0.0-py3-none-any.whl (87 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.5/87.5 kB 7.2 MB/s eta 0:00:00
+Downloading pygments-2.18.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 48.3 MB/s eta 0:00:00
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 15.9 MB/s eta 0:00:00
+Downloading pytz-2024.1-py2.py3-none-any.whl (505 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 505.5/505.5 kB 33.7 MB/s eta 0:00:00
+Downloading tzdata-2024.1-py2.py3-none-any.whl (345 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 345.4/345.4 kB 25.9 MB/s eta 0:00:00
+Downloading urllib3-2.2.2-py3-none-any.whl (121 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.4/121.4 kB 9.9 MB/s eta 0:00:00
+Downloading toolz-0.12.1-py3-none-any.whl (56 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.1/56.1 kB 3.8 MB/s eta 0:00:00
+Downloading attrs-23.2.0-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.8/60.8 kB 3.6 MB/s eta 0:00:00
+Downloading importlib_resources-6.4.0-py3-none-any.whl (38 kB)
+Downloading jsonschema_specifications-2023.12.1-py3-none-any.whl (18 kB)
+Downloading MarkupSafe-2.1.5-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (26 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading pkgutil_resolve_name-1.3.10-py3-none-any.whl (4.7 kB)
+Downloading referencing-0.35.1-py3-none-any.whl (26 kB)
+Downloading rpds_py-0.19.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (355 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 355.7/355.7 kB 22.9 MB/s eta 0:00:00
+Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+Downloading smmap-5.0.1-py3-none-any.whl (24 kB)
+Downloading zipp-3.19.2-py3-none-any.whl (9.0 kB)
+Installing collected packages: pytz, zipp, watchdog, urllib3, tzdata, typing-extensions, tornado, toolz, toml, tenacity, smmap, six, rpds-py, pygments, protobuf, pkgutil-resolve-name, pillow, packaging, numpy, mdurl, MarkupSafe, idna, click, charset-normalizer, certifi, cachetools, blinker, attrs, requests, referencing, python-dateutil, pyarrow, markdown-it-py, jinja2, importlib-resources, gitdb, rich, pydeck, pandas, jsonschema-specifications, gitpython, jsonschema, altair, streamlit
+Successfully installed MarkupSafe-2.1.5 altair-5.3.0 attrs-23.2.0 blinker-1.8.2 cachetools-5.3.3 certifi-2024.7.4 charset-normalizer-3.3.2 click-8.1.7 gitdb-4.0.11 gitpython-3.1.43 idna-3.7 importlib-resources-6.4.0 jinja2-3.1.4 jsonschema-4.23.0 jsonschema-specifications-2023.12.1 markdown-it-py-3.0.0 mdurl-0.1.2 numpy-1.24.4 packaging-24.1 pandas-2.0.3 pillow-10.4.0 pkgutil-resolve-name-1.3.10 protobuf-5.27.2 pyarrow-16.1.0 pydeck-0.9.1 pygments-2.18.0 python-dateutil-2.9.0.post0 pytz-2024.1 referencing-0.35.1 requests-2.32.3 rich-13.7.1 rpds-py-0.19.0 six-1.16.0 smmap-5.0.1 streamlit-1.36.0 tenacity-8.5.0 toml-0.10.2 toolz-0.12.1 tornado-6.4.1 typing-extensions-4.12.2 tzdata-2024.1 urllib3-2.2.2 watchdog-4.0.1 zipp-3.19.2
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0mRemoving intermediate container 1b76f568d0b4
+ ---> a5eaf556b1c2
+Step 10/11 : EXPOSE 8501
+ ---> Running in 821e12e474af
+Removing intermediate container 821e12e474af
+ ---> 608b9ad73015
+Step 11/11 : CMD streamlit run app.py
+ ---> Running in ee94e61074ff
+Removing intermediate container ee94e61074ff
+ ---> 80ea80ef0607
+Successfully built 80ea80ef0607
+Successfully tagged calculategrowth:latest
+[Pipeline] sh
++ docker tag calculategrowth anirudhadak2/new-app:calculategrowth
+[Pipeline] sh
++ docker push anirudhadak2/new-app:calculategrowth
+The push refers to repository [docker.io/anirudhadak2/new-app]
+7908a42c363d: Preparing
+03c8bbc2bcb9: Preparing
+f6b5a8eb4718: Preparing
+ac4c6d809a08: Preparing
+81c3853b660e: Preparing
+355a405a5044: Preparing
+b17bde752cfb: Preparing
+37e59810634d: Preparing
+b11bb163e263: Preparing
+b779a72428fa: Preparing
+8ada682d3780: Preparing
+15bb10f9bb3a: Preparing
+355a405a5044: Waiting
+b17bde752cfb: Waiting
+37e59810634d: Waiting
+b11bb163e263: Waiting
+b779a72428fa: Waiting
+8ada682d3780: Waiting
+15bb10f9bb3a: Waiting
+f6b5a8eb4718: Layer already exists
+ac4c6d809a08: Layer already exists
+b17bde752cfb: Layer already exists
+355a405a5044: Layer already exists
+37e59810634d: Layer already exists
+81c3853b660e: Layer already exists
+b11bb163e263: Layer already exists
+b779a72428fa: Layer already exists
+8ada682d3780: Layer already exists
+15bb10f9bb3a: Layer already exists
+03c8bbc2bcb9: Pushed
+7908a42c363d: Pushed
+calculategrowth: digest: sha256:8ec42d768a2999faa4b02d18901232a7c9b7635b4020a346afb5d5140e1c36bc size: 2849
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (TRIVY)
+[Pipeline] sh
++ trivy image anirudhadak2/new-app:calculategrowth
+2024-07-15T17:12:44Z	INFO	Vulnerability scanning is enabled
+2024-07-15T17:12:44Z	INFO	Secret scanning is enabled
+2024-07-15T17:12:44Z	INFO	If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2024-07-15T17:12:44Z	INFO	Please see also https://aquasecurity.github.io/trivy/v0.53/docs/scanner/secret#recommendation for faster secret detection
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="GitPython" version="3.1.43"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="MarkupSafe" version="2.1.5"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="cachetools" version="5.3.3"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="certifi" version="2024.7.4"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="charset-normalizer" version="3.3.2"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="click" version="8.1.7"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="gitdb" version="4.0.11"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="jsonschema" version="4.23.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="jsonschema-specifications" version="2023.12.1"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="numpy" version="1.24.4"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="pandas" version="2.0.3"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="pillow" version="10.4.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="pyarrow" version="16.1.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="Pygments" version="2.18.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="python-dateutil" version="2.9.0.post0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="pytz" version="2024.1"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="requests" version="2.32.3"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="rich" version="13.7.1"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="rpds-py" version="0.19.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="six" version="1.16.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="smmap" version="5.0.1"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="streamlit" version="1.36.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="tenacity" version="8.5.0"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="toml" version="0.10.2"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="toolz" version="0.12.1"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="tornado" version="6.4.1"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="tzdata" version="2024.1"
+2024-07-15T17:13:26Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="watchdog" version="4.0.1"
+2024-07-15T17:13:26Z	INFO	Detected OS	family="debian" version="12.6"
+2024-07-15T17:13:26Z	INFO	[debian] Detecting vulnerabilities...	os_version="12" pkg_num=429
+2024-07-15T17:13:27Z	INFO	Number of language-specific files	num=1
+2024-07-15T17:13:27Z	INFO	[python-pkg] Detecting vulnerabilities...
+2024-07-15T17:13:27Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://aquasecurity.github.io/trivy/v0.53/docs/scanner/vulnerability#severity-selection for details.
+2024-07-15T17:13:27Z	INFO	Table result includes only package filenames. Use '--format json' option to get the full path to the package file.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] sh
++ docker-compose down
+time="2024-07-15T17:13:31Z" level=warning msg="/var/lib/jenkins/workspace/calculate-growth-app/docker-compose.yaml: `version` is obsolete"
+ Container calculate-growth-app-web-1  Stopping
+ Container calculate-growth-app-web-1  Stopped
+ Container calculate-growth-app-web-1  Removing
+ Container calculate-growth-app-web-1  Removed
+ Network calculate-growth-app_default  Removing
+ Network calculate-growth-app_default  Removed
++ docker-compose up -d
+time="2024-07-15T17:13:43Z" level=warning msg="/var/lib/jenkins/workspace/calculate-growth-app/docker-compose.yaml: `version` is obsolete"
+ Network calculate-growth-app_default  Creating
+ Network calculate-growth-app_default  Created
+ Container calculate-growth-app-web-1  Creating
+ Container calculate-growth-app-web-1  Created
+ Container calculate-growth-app-web-1  Starting
+ Container calculate-growth-app-web-1  Started
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
