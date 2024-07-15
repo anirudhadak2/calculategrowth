@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    
+    stages{
+        stage("Code"){
+            steps{
+                git url: "https://github.com/anirudhadak2/calculategrowth.git", branch: "main" 
+            }
+        }
+
+
+stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }
+
+
+ stage("Docker Build & Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                           sh "docker build -t calculategrowth ."  
+                           sh "docker tag  calculategrowth  anirudhadak2/new-app:calculategrowth"
+                           sh "docker push anirudhadak2/new-app:calculategrowth"
+                    }
+                }
+            }
+        }
+
+        stage("TRIVY"){
+            steps{
+                sh "trivy image  anirudhadak2/new-app:calculategrowth  > trivyimage.txt" 
+            }
+        }
+
+
+        stage("Deploy"){
+            steps{
+                sh "docker-compose down && docker-compose up -d"
+            }
+        }
+    }
+}
+
