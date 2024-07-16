@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculategrowth-deployment
+  labels:
+    app: calculategrowth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculategrowth
+  template:
+    metadata:
+      labels:
+        app: calculategrowth
+    spec:
+      containers:
+      - name: calculategrowth
+        image: anirudhadak2/new-app:calculategrowth
+        ports:
+        - containerPort: 8501
