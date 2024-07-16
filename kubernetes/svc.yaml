@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculategrowth-service
+  labels:
+    app: calculategrowth
+spec:
+  selector:
+    app: calculategrowth
+  ports:
+    - protocol: TCP
+      port: 8501
+      targetPort: 8501
+  type: NodePort  # This will expose the service on a port on each node
